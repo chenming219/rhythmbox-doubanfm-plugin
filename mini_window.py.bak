@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import os, urllib.request, urllib.parse, urllib.error, _thread
+import os, urllib, thread
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Pango, RB, GLib
 from doubanfm_keys import *
 
@@ -217,7 +217,7 @@ class MiniWindow(GObject.Object):
 			self.song_info_label.set_label(self.song_info_str)
 			self.fav_button.set_image(self.button_images['fav'] if self.current_song.like else
 				self.button_images['nofav'])
-			_thread.start_new_thread(self.update_cover_image, ())
+			thread.start_new_thread(self.update_cover_image, ())
 		else:
 			self.source.new_playlist()
 
@@ -239,7 +239,7 @@ class MiniWindow(GObject.Object):
 
 	def update_cover_image(self):
 		url = self.current_song.picture
-		GLib.idle_add(self.update_cover_image_cb, urllib.request.urlopen(url).read())
+		GLib.idle_add(self.update_cover_image_cb, urllib.urlopen(url).read())
 
 	def update_cover_image_cb(self, data):
 		loader = GdkPixbuf.PixbufLoader()
@@ -274,32 +274,32 @@ class MiniWindow(GObject.Object):
 		return True
 
 	def on_share_sina(self, *e):
-		url = self.share_templates['sina'] % tuple(map(urllib.parse.quote_plus, 
+		url = self.share_templates['sina'] % tuple(map(urllib.quote_plus, 
 			[self.song_url, self.song_title_str, self.current_song.picture]))
 		os.popen(' '.join(['xdg-open', '"%s"' % url]))
 
 	def on_share_kaixin001(self, *e):
-		url = self.share_templates['kaixin001'] % tuple(map(urllib.parse.quote_plus,
+		url = self.share_templates['kaixin001'] % tuple(map(urllib.quote_plus,
 			[self.song_url, self.song_title_str]))
 		os.popen(' '.join(['xdg-open', '"%s"' % url]))
 
 	def on_share_renren(self, *e):
-		url = self.share_templates['renren'] % tuple(map(urllib.parse.quote_plus,
+		url = self.share_templates['renren'] % tuple(map(urllib.quote_plus,
 			[self.song_title_str, self.song_url]))
 		os.popen(' '.join(['xdg-open', '"%s"' % url]))
 
 	def on_share_twitter(self, *e):
-		url = self.share_templates['twitter'] % tuple(map(urllib.parse.quote_plus,
+		url = self.share_templates['twitter'] % tuple(map(urllib.quote_plus,
 			[self.song_title_str, self.song_url]))
 		os.popen(' '.join(['xdg-open', '"%s"' % url]))
 
 	def on_share_fanfou(self, *e):
-		url = self.share_templates['fanfou'] % tuple(map(urllib.parse.quote_plus,
+		url = self.share_templates['fanfou'] % tuple(map(urllib.quote_plus,
 			[self.song_url, self.song_title_str]))
 		os.popen(' '.join(['xdg-open', '"%s"' % url]))
 
 	def on_recommend_song(self, *e):
-		url = self.share_templates['douban'] % tuple(map(urllib.parse.quote_plus, [
+		url = self.share_templates['douban'] % tuple(map(urllib.quote_plus, [
 				self.current_song.title.encode('utf8'),
 				self.song_url,
 				self.current_song.picture,

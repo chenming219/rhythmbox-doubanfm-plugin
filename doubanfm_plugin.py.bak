@@ -62,7 +62,8 @@ class DoubanFMPlugin(GObject.Object, Peas.Activatable, PeasGtk.Configurable):
 
 		# create a source under 'stores' group
 		group = RB.DisplayPageGroup.get_by_id ('stores')
-		self.source = GObject.new(DoubanFMSource, shell=self.shell,entry_type=self.entry_type, pixbuf=icon, plugin=self)
+		self.source = GObject.new(DoubanFMSource, shell=self.shell,
+			entry_type=self.entry_type, pixbuf=icon, plugin=self)
 		self.shell.register_entry_type_for_source(self.source, self.entry_type)
 		self.shell.append_display_page(self.source, group)
 
